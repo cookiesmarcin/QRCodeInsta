@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skaner QR</title>
-    <!-- Import biblioteki html5-qrcode z CDN -->
-    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script> <!-- Poprawiony link do CDN -->
     <style>
-        /* Stylizacja elementów */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -32,27 +30,22 @@
     <div id="reader"></div> <!-- Obszar skanera QR -->
 
     <script>
-        // Funkcja wywoływana po pomyślnym zeskanowaniu kodu QR
         function onScanSuccess(decodedText, decodedResult) {
             console.log(`Zeskanowano kod QR: ${decodedText}`);
             alert(`Zeskanowano kod QR: ${decodedText}`);
-            // Przekierowanie do URL z kodu QR
             window.location.href = decodedText;
         }
 
-        // Funkcja wywoływana w przypadku błędu skanowania
         function onScanError(errorMessage) {
             console.error(`Błąd skanowania: ${errorMessage}`);
         }
 
-        // Inicjalizacja skanera QR po załadowaniu strony
         document.addEventListener("DOMContentLoaded", function () {
             const html5QrCode = new Html5Qrcode("reader");
             const config = { fps: 10, qrbox: { width: 250, height: 250 } };
 
-            // Uruchomienie skanera z ustawieniami
             html5QrCode.start(
-                { facingMode: "environment" }, // Użycie tylnej kamery
+                { facingMode: "environment" },
                 config,
                 onScanSuccess,
                 onScanError
@@ -63,4 +56,3 @@
     </script>
 </body>
 </html>
-
