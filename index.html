@@ -4,35 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skaner QR - Instascan</title>
+    <!-- Dodanie biblioteki Instascan -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/instascan/1.0.0/instascan.min.js"></script>
 </head>
 <body>
     <h1>Skaner QR</h1>
     <video id="preview" style="width: 300px;"></video>
-    <div id="qr-reader-results"></div>
 
     <script>
-        // Inicjalizacja skanera Instascan
         function startScanner() {
             let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-
             scanner.addListener('scan', function (content) {
                 console.log("Kod QR zeskanowany: " + content);
                 alert("Kod QR zeskanowany: " + content);
                 window.location.href = content;
             });
-
             Instascan.Camera.getCameras().then(function (cameras) {
                 if (cameras.length > 0) {
-                    // Użycie tylnej kamery, jeśli jest dostępna
                     scanner.start(cameras[0]);
                 } else {
-                    console.error('Nie znaleziono kamery.');
-                    alert('Nie znaleziono kamery.');
+                    console.error("Nie znaleziono kamery.");
                 }
             }).catch(function (e) {
-                console.error(e);
-                alert("Błąd przy uzyskiwaniu dostępu do kamery: " + e);
+                console.error("Błąd: " + e);
             });
         }
 
