@@ -4,38 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Skaner QR</title>
-    <!-- Załaduj Instascan z CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/instascan/1.0.0/instascan.min.js"></script>
+    <!-- Import biblioteki html5-qrcode z CDN -->
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
+    <style>
+        /* Stylizacja elementów */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            color: #333;
+        }
+        #reader {
+            width: 300px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <h1>Skaner QR</h1>
-    <video id="preview" style="width: 300px;"></video>
-    <div id="qr-reader-results"></div>
+    <div id="reader"></div> <!-- Obszar skanera QR -->
 
     <script>
-        function startScanner() {
-            let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-            scanner.addListener('scan', function (content) {
-                console.log("Kod QR zeskanowany: " + content);
-                alert("Kod QR zeskanowany: " + content);
-                window.location.href = content;
-            });
-
-            Instascan.Camera.getCameras().then(function (cameras) {
-                if (cameras.length > 0) {
-                    scanner.start(cameras[0]);
-                } else {
-                    console.error("Nie znaleziono kamery.");
-                    alert("Nie znaleziono kamery.");
-                }
-            }).catch(function (e) {
-                console.error(e);
-                alert("Błąd przy uzyskiwaniu dostępu do kamery: " + e);
-            });
+        // Funkcja wywoływana po pomyślnym zeskanowaniu kodu QR
+        function onScanSuccess(decodedText, decodedResult) {
+            console.log(`Zeskanowano kod QR: ${decodedText}`);
+            alert(`Zeskanowano kod QR: ${decodedText}`);
+            // Przekierowanie do URL z kodu QR
+            window.location.href = decodedText;
         }
 
-        // Uruchomienie skanera przy wczytaniu strony
-        window.addEventListener("load", startScanner);
+        // Funkcja wywoływana w przypadku błędu skanowania
+        function onScanError(errorMessage) {
+            console.error(`Błąd skanowania: ${errorMessage}`);
+        }
+
+        // Inicjalizacja skanera QR po załadowaniu strony
+        document.addEventListener("DOMContentLoaded", function () {
+            const html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+            // Uruchomienie skanera z ustawieniami
+            html5QrCode.start(
+                { facingMode: "environment" }, // Użycie tylnej kamery
+                config,
+                onScanSuccess,
+                onScanError
+            ).catch(err => {
+                console.error(`Błąd uruchomienia skanera: ${err}`);
+            });
+        });
     </script>
 </body>
 </html>
+
