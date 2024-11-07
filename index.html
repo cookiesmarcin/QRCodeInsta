@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skaner QR - Instascan</title>
-    <!-- Dodanie biblioteki Instascan -->
+    <title>Skaner QR</title>
+    <!-- Załaduj Instascan z CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/instascan/1.0.0/instascan.min.js"></script>
 </head>
 <body>
     <h1>Skaner QR</h1>
     <video id="preview" style="width: 300px;"></video>
+    <div id="qr-reader-results"></div>
 
     <script>
         function startScanner() {
@@ -19,18 +20,21 @@
                 alert("Kod QR zeskanowany: " + content);
                 window.location.href = content;
             });
+
             Instascan.Camera.getCameras().then(function (cameras) {
                 if (cameras.length > 0) {
                     scanner.start(cameras[0]);
                 } else {
                     console.error("Nie znaleziono kamery.");
+                    alert("Nie znaleziono kamery.");
                 }
             }).catch(function (e) {
-                console.error("Błąd: " + e);
+                console.error(e);
+                alert("Błąd przy uzyskiwaniu dostępu do kamery: " + e);
             });
         }
 
-        // Rozpoczęcie skanowania przy załadowaniu strony
+        // Uruchomienie skanera przy wczytaniu strony
         window.addEventListener("load", startScanner);
     </script>
 </body>
